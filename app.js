@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Recipe = require('./models/recipe');
 
 mongoose.Promise = require('bluebird');
-mongoose.connect('mongodb://localhost/27017/mongoosestore');
+mongoose.connect('mongodb://localhost:27017/mongoosestore');
 
 // const newRecipe = new Recipe({name: 'Salad'});
 // const ingredient = {amount: 5, name: 'cherry tomatoes'};
@@ -16,19 +16,19 @@ mongoose.connect('mongodb://localhost/27017/mongoosestore');
 //   //res.render...
 // });
 //
-// //remember this will return an object and you can use dot notation on it
+//remember this will return an object and you can use dot notation on it
 // Recipe.findOne({name: 'Salad'}).then(result => {
 //   console.log(result);
 // });
 
-//updateone: the verbose way
-Recipe.findOne({name: 'Salad'}).then(result => {
-  const ingredient = {name: 'cucumbers', amount: 1};
-  result.ingredients.push(ingredient);
-  result.save();
-});
-
-//updateone: betterway
+// //updateone: the verbose way
+// Recipe.findOne({name: 'Salad'}).then(result => {
+//   const ingredient = {name: 'cucumbers', amount: 1};
+//   result.ingredients.push(ingredient);
+//   result.save();
+// });
+//
+//updateone: betterway THIS DOESN'T WORK
 Recipe.updateOne({name: 'Salad'},
   {
     $push: {
@@ -36,3 +36,7 @@ Recipe.updateOne({name: 'Salad'},
     }
   }
 );
+
+Recipe.findOne({name: 'Salad'}).then(result => {
+  console.log(result);
+});
