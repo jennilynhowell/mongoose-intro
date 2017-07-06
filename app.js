@@ -1,42 +1,19 @@
+const express = require('express');
 const mongoose = require('mongoose');
 const Recipe = require('./models/recipe');
+const mustacheExpress = require('mustache-express');
+const recipeController = require('./controllers/recipe-controller');
+
+const app = express();
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', './views');
 
 mongoose.Promise = require('bluebird');
 mongoose.connect('mongodb://localhost:27017/mongoosestore');
 
-// const newRecipe = new Recipe({name: 'Salad'});
-// const ingredient = {amount: 5, name: 'cherry tomatoes'};
-// newRecipe.ingredients.push(ingredient);
-// newRecipe.save(); //sends it to the database
-// console.log(newRecipe.toObject());
 
-// //use this in your app.get
-// Recipe.find({}).then(results => {
-//   console.log(results);
-//   //res.render...
-// });
-//
-//remember this will return an object and you can use dot notation on it
-// Recipe.findOne({name: 'Salad'}).then(result => {
-//   console.log(result);
-// });
 
-// //updateone: the verbose way
-// Recipe.findOne({name: 'Salad'}).then(result => {
-//   const ingredient = {name: 'cucumbers', amount: 1};
-//   result.ingredients.push(ingredient);
-//   result.save();
-// });
-//
-//updateone: betterway THIS DOESN'T WORK
-Recipe.updateOne({name: 'Salad'},
-  {
-    $push: {
-      ingredients: {name: 'olives', amount: 3}
-    }
-  }
-);
+app.get('/', recipeController.list);
 
-Recipe.findOne({name: 'Salad'}).then(result => {
-  console.log(result);
-});
+app.listen(3000);
